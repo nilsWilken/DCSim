@@ -26,7 +26,7 @@ public class DRRequestParser {
 	/**
 	 * Format of the dates that are used in the file that contains the DR request event trace.
 	 */
-	private static final SimpleDateFormat INPUT_DATE_FORMAT = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss", Locale.GERMAN);
+	private static final SimpleDateFormat INPUT_DATE_FORMAT = Constants.getDateFormat();;
 	
 	/**
 	 * Parses a DR request event trace from a .csv file. 
@@ -119,7 +119,7 @@ public class DRRequestParser {
 			}
 		}
 		else {
-			System.out.println("Line number " + lineNumber + " has more or less than 5 fields!");
+			System.out.println("DRRequestParser: Line number " + lineNumber + " has more or less than 5 fields!");
 		}
 		
 		return null;

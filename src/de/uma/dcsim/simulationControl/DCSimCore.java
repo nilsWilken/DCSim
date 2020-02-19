@@ -42,6 +42,7 @@ import de.uma.dcsim.hardware.DC;
 import de.uma.dcsim.hardware.Server;
 import de.uma.dcsim.scheduling.SchedulingResult;
 import de.uma.dcsim.utilities.BatchJob;
+import de.uma.dcsim.utilities.Constants;
 import de.uma.dcsim.utilities.ReserveProvisionType;
 
 /**
@@ -103,7 +104,7 @@ public class DCSimCore {
 					dc.setupDC();
 				}
 				
-				SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
+				SimpleDateFormat format = Constants.getDateFormat();;
 				Date simStart = new Date();
 				Date simEnd = new Date();
 				

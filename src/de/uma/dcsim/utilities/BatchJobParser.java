@@ -28,7 +28,7 @@ public class BatchJobParser {
 	/**
 	 * Format of the dates that is used in the file that contains the workload trace.
 	 */
-	private static final SimpleDateFormat INPUT_DATE_FORMAT = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss", Locale.GERMAN);
+	private static final SimpleDateFormat INPUT_DATE_FORMAT = Constants.getDateFormat();
 	
 	/**
 	 * Maximum runtime of the jobs in the workload trace.
@@ -213,7 +213,7 @@ public class BatchJobParser {
 			
 		}
 		else {
-			System.out.println("Line number " + lineNumber + " has wrong amount of fields!");
+			System.out.println("BatchJobParser: Line number " + lineNumber + " has wrong amount of fields!");
 		}
 		
 		return null;

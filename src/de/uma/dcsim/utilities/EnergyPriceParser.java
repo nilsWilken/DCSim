@@ -27,7 +27,7 @@ public class EnergyPriceParser {
 	/**
 	 * Format of the dates that are used in the csv file that contains the energy price trace.
 	 */
-	private static final SimpleDateFormat INPUT_DATE_FORMAT = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss", Locale.GERMAN);
+	private static final SimpleDateFormat INPUT_DATE_FORMAT = Constants.getDateFormat();;
 	
 	/**
 	 * Parses the energy trace from a specified file.
@@ -112,7 +112,7 @@ public class EnergyPriceParser {
 			}
 		}
 		else {
-			System.out.println("Line number " + lineNumber + " has more or less than 2 fields!");
+			System.out.println("EnergyPriceParser: Line number " + lineNumber + " has more or less than 2 fields!");
 		}
 		
 		return null;

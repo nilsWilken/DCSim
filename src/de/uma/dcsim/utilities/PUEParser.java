@@ -27,7 +27,7 @@ public class PUEParser {
 	/**
 	 * Format of the date strings within the PUE trace file.
 	 */
-	private static final SimpleDateFormat INPUT_DATE_FORMAT = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss", Locale.GERMAN);
+	private static final SimpleDateFormat INPUT_DATE_FORMAT = Constants.getDateFormat();
 	
 	/**
 	 * Parses a PUE trace from a specified file.

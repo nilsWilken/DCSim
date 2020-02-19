@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.TimeZone;
 
 
 /**
@@ -72,6 +73,7 @@ public class SqLiteDBHandler {
 	public SqLiteDBHandler(String databaseName) {
 		String url = "jdbc:sqlite:" + databaseName;
 		this.format = new SimpleDateFormat("dd_MM_yyyy");
+		this.format.setTimeZone(TimeZone.getTimeZone("GMT"));
 		this.createTablesCalled = false;
 		
 		try {

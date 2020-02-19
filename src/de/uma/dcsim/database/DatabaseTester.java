@@ -8,7 +8,7 @@ package de.uma.dcsim.database;
 // * @author nilsw
 // *
 // */
-//public class DatabaseTester {
+public class DatabaseTester {
 //	
 //	public static void main(String[] args) {
 //		SqLiteDBHandler dbHandler = new SqLiteDBHandler("test.db");
@@ -40,4 +40,4 @@ package de.uma.dcsim.database;
 //		System.out.println(dbHandler.getStatisticWithFilter("testResult2", StatisticType.AVERAGE, ColumnType.TOTAL_EC, filterList, frameList));
 //	}
 //
-//}
+}

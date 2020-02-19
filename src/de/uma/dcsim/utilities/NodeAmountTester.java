@@ -14,7 +14,7 @@ public class NodeAmountTester {
 		BatchJobParser parser = new BatchJobParser();
 		ArrayList<BatchJob> jobs;
 		
-		SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
+		SimpleDateFormat format = Constants.getDateFormat();;
 		try {
 			jobs = (ArrayList<BatchJob>)parser.parseJobFile("src/main/resources/superMUC_jobs_january.csv", format.parse("01.01.2014 00:00:00"));
 //			printNodeAmounts(jobs, format.parse("01.01.2014 00:00:00"), format.parse("30.01.2014 23:59:59"));
@@ -69,7 +69,7 @@ public class NodeAmountTester {
 		Date tmp2 = new Date(startDate.getTime() + (millisecondsPerTimestep - 1000));
 		double nodeSum = 0;
 		double overallNodeSum = 0;
-		SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
+		SimpleDateFormat format = Constants.getDateFormat();;
 		
 		while(tmp.before(endDate)) {
 			for(BatchJob job : jobs) {
@@ -99,7 +99,7 @@ public class NodeAmountTester {
 		Date tmp2 = new Date(startDate.getTime() + (millisecondsPerTimestep - 1000));
 		double jobSum = 0;
 		double overallJobSum = 0;
-		SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
+		SimpleDateFormat format = Constants.getDateFormat();;
 		
 		while(tmp.before(endDate)) {
 			for(BatchJob job : jobs) {
@@ -129,7 +129,7 @@ public class NodeAmountTester {
 		Date tmp2 = new Date(startDate.getTime() + (millisecondsPerTimestep - 1000));
 		double jobPowerSum = 0;
 		double overallJobPowerSum = 0;
-		SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
+		SimpleDateFormat format = Constants.getDateFormat();;
 		
 		while(tmp.before(endDate)) {
 			for(BatchJob job : jobs) {

@@ -10,6 +10,7 @@ import de.uma.dcsim.database.DatabaseRecord;
 import de.uma.dcsim.database.EvaluationTable;
 import de.uma.dcsim.database.SqLiteDBHandler;
 import de.uma.dcsim.database.StatisticType;
+import de.uma.dcsim.utilities.Constants;
 
 /**
  * This class can be used to retrieve several values from the databases that store the simulation monitoring values.
@@ -125,7 +126,7 @@ public class SimulationEvaluator {
 			result.add(this.dbHandler.getStatisticWithFilter(evaluationTable, statisticType, statisticColumn, filterColumns, filterFrame));
 			
 			if((tmp.getTime()-startDate.getTime())%86400000 == 0) {
-				SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
+				SimpleDateFormat format = Constants.getDateFormat();
 				System.out.println(format.format(tmp));
 			}
 

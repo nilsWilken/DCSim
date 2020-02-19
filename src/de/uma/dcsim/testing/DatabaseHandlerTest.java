@@ -18,7 +18,7 @@ package de.uma.dcsim.testing;
 //import database.StatisticType;
 //import database.TableType;
 //
-//public class DatabaseHandlerTest {
+public class DatabaseHandlerTest {
 //
 //	
 //	@Test
@@ -125,4 +125,4 @@ package de.uma.dcsim.testing;
 //		
 //		
 //	}
-//}
+}

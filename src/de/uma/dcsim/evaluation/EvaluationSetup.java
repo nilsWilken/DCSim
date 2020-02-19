@@ -9,6 +9,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+import java.util.TimeZone;
 
 import de.uma.dcsim.database.StatisticType;
 
@@ -72,7 +74,7 @@ public class EvaluationSetup {
 		this.dbPath = dbPath;
 		this.outputPath = outputPath;
 		this.dbNames = dbNames;
-		this.dateFormat = new SimpleDateFormat(dateFormatString);
+		this.dateFormat = new SimpleDateFormat(dateFormatString, Locale.GERMAN);
 		this.startDateString = startDate;
 		this.endDateString = endDate;
 		this.millisecondsPerAggregationInterval = Integer.parseInt(millisecondsPerAggregationInterval);
@@ -81,7 +83,7 @@ public class EvaluationSetup {
 	}
 
 	public void evaluate() {
-		
+		this.dateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
 		
 		//If specified directory does not exist, create it!
 		if(!(new File(outputPath+evaluationName).exists())) {
@@ -89,22 +91,24 @@ public class EvaluationSetup {
 		}
 		
 		//Create date strings for aggregated time series data
-		Date start = new Date();
-		Date end = new Date();
+		Date start;
+		Date end;
 		ArrayList<String> columnNames = new ArrayList<String>();
 		columnNames.add("Time");
 		ArrayList<String> times = new ArrayList<String>();
 		try {
-			start = dateFormat.parse(startDateString);
-			end = dateFormat.parse(endDateString);
+			start = this.dateFormat.parse(startDateString);
+			end = this.dateFormat.parse(endDateString);
 			
 			Date tmp = new Date(start.getTime());
 			while(tmp.before(end)) {
-				times.add(dateFormat.format(tmp));
+				times.add(this.dateFormat.format(tmp));
 				tmp.setTime(tmp.getTime()+millisecondsPerAggregationInterval);
 			}
 			
 		} catch (ParseException e) {
+			start = new Date();
+			end = new Date();
 			e.printStackTrace();
 		}
 				

@@ -21,9 +21,12 @@
 package de.uma.dcsim.simulationControl;
 
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
+import java.util.TimeZone;
 
 import javax.xml.bind.DatatypeConverter;
 import javax.xml.parsers.DocumentBuilder;
@@ -46,6 +49,7 @@ import de.uma.dcsim.scheduling.schedulingStrategies.schedulingUtilities.Scheduli
 import de.uma.dcsim.serviceRelatedClasses.VM;
 import de.uma.dcsim.utilities.BatchJob;
 import de.uma.dcsim.utilities.BatchJobParser;
+import de.uma.dcsim.utilities.Constants;
 import de.uma.dcsim.utilities.DRRequest;
 import de.uma.dcsim.utilities.DRRequestParser;
 import de.uma.dcsim.utilities.EnergyPrice;
@@ -163,6 +167,11 @@ public class Setup {
 	 * used.
 	 */
 	public static boolean useFutureKnowledge = false;
+	
+	/**
+	 * Format of the dates that is used in the file that contains the workload trace.
+	 */
+	private static final SimpleDateFormat INPUT_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.GERMAN);
 	
 	public static double usagePrice = 0.36;
 
@@ -304,7 +313,13 @@ public class Setup {
 		NodeList simStartTimeList = doc.getElementsByTagName("SimStartTime");
 		String startTime = ((Node) (((Element) simStartTimeList.item(0))
 				.getChildNodes()).item(0)).getNodeValue().trim();
-		 c = DatatypeConverter.parseDateTime(startTime);
+		 
+		startTime = startTime.replace("T", " ");
+		System.out.println("Parsed start string: " + startTime);
+		c = Calendar.getInstance();
+		INPUT_DATE_FORMAT.setTimeZone(TimeZone.getTimeZone("GMT"));
+		c.setTime(this.INPUT_DATE_FORMAT.parse(startTime));
+		//c = DatatypeConverter.parseDateTime(startTime);
 				
 		NodeList simlengthList = doc.getElementsByTagName("SimLength");
 		int length = Integer.parseInt(((Node) (((Element) simlengthList.item(0))
