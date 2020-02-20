@@ -15,7 +15,9 @@ public enum TableType {
 	/**
 	 * Table type for DR request response monitoring values (e.g., used shifting fraction, used scaling frequency)
 	 */
-	DR_REQUEST_MONITORING_TABLE;
+	DR_REQUEST_MONITORING_TABLE,
+	
+	FINISHED_JOB_MONITORING_TABLE;
 	
 	
 	public static TableType parseTableTypeFromString(String type) {
@@ -25,6 +27,8 @@ public enum TableType {
 			return GENERAL_SIMULATION_MONITORING_TABLE;
 		case "drm":
 			return DR_REQUEST_MONITORING_TABLE;
+		case "jft":
+			return FINISHED_JOB_MONITORING_TABLE;
 		default:
 			return null;
 		}
@@ -41,6 +45,8 @@ public enum TableType {
 			return "_DRM";
 		case GENERAL_SIMULATION_MONITORING_TABLE:
 			return "_GSM";
+		case FINISHED_JOB_MONITORING_TABLE:
+			return "_JFT";
 		default:
 			return null;
 		}

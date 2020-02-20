@@ -60,7 +60,7 @@ public class SimulationEvaluator {
 		StringBuffer buff;
 		for(DatabaseRecord record : records) {
 			buff = new StringBuffer();
-			buff.append(dateFormat.format(new Date(record.getLong(ColumnType.TIMESTAMP))) + ";");
+//			buff.append(dateFormat.format(new Date(record.getLong(ColumnType.TIMESTAMP))) + ";");
 			switch(ColumnType.getJavaVarType(column)) {
 			case DOUBLE:
 				buff.append(""+record.getDouble(column));
@@ -69,7 +69,14 @@ public class SimulationEvaluator {
 				buff.append(""+record.getInt(column));
 				break;
 			case LONG:
+				if(ColumnType.isDateValue(column)) {
+					buff.append(dateFormat.format(new Date(record.getLong(column))));
+					break;
+				}
 				buff.append(""+record.getLong(column));
+				break;
+			case TEXT:
+				buff.append(record.getString(column));
 				break;
 			default:
 				break;

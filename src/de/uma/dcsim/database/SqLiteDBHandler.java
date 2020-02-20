@@ -301,7 +301,6 @@ public class SqLiteDBHandler {
 	 */
 	public ArrayList<DatabaseRecord> getRecordsBetweenDates(EvaluationTable evaluationTable, Date firstDate, Date lastDate) {
 		PreparedStatement selectBetweenDates = selectAllBetweenDates.get(EvaluationTable.getTableName(evaluationTable));
-
 		if (selectBetweenDates == null) {
 			return null;
 		}
@@ -423,6 +422,8 @@ public class SqLiteDBHandler {
 					sql += " and ";
 				}
 				sql += ColumnType.convertToStringName(currentType) + " >= " + lowerBoundI + " and " + ColumnType.convertToStringName(currentType) + " <= " + upperBoundI;
+			case TEXT:
+				System.out.println("Filtering for an interval is not applicable on attributes of type TEXT!");
 			}
 		}
 		
@@ -762,6 +763,9 @@ public class SqLiteDBHandler {
 					break;
 				case LONG:
 					statement.setLong(index, (Long)value);
+					break;
+				case TEXT:
+					statement.setString(index, (String)value);
 					break;
 				default:
 					break;

@@ -354,5 +354,9 @@ public class DCSimCore {
 		currentTime.setTime(currentTime.getTime()+(DCSimCore.clock*1000));
 		return currentTime;
 	}
+	
+	public static SqLiteDBHandler getDBHandler() {
+		return DCSimCore.dbHandler;
+	}
 
 }

@@ -3,7 +3,8 @@ package de.uma.dcsim.database;
 public enum EvaluationTable {
 	
 	GENERAL_EVALUATION_TABLE,
-	DR_REQUEST_RECORD_TABLE;
+	DR_REQUEST_RECORD_TABLE,
+	FINISHED_JOB_INFO_TABLE;
 	
 	public static String getTableName(EvaluationTable type) {
 		switch(type) {
@@ -11,6 +12,8 @@ public enum EvaluationTable {
 			return "General_Simulation_Records" + TableType.getTablePostfix(EvaluationTable.getTableType(GENERAL_EVALUATION_TABLE));
 		case DR_REQUEST_RECORD_TABLE:
 			return "DR_Request_Records" + TableType.getTablePostfix(EvaluationTable.getTableType(DR_REQUEST_RECORD_TABLE));
+		case FINISHED_JOB_INFO_TABLE:
+			return "Finished_Jobs_Info" + TableType.getTablePostfix(EvaluationTable.getTableType(FINISHED_JOB_INFO_TABLE));
 		default:
 			return "";
 		}
@@ -22,6 +25,8 @@ public enum EvaluationTable {
 			return TableType.GENERAL_SIMULATION_MONITORING_TABLE;
 		case DR_REQUEST_RECORD_TABLE:
 			return TableType.DR_REQUEST_MONITORING_TABLE;
+		case FINISHED_JOB_INFO_TABLE:
+			return TableType.FINISHED_JOB_MONITORING_TABLE;
 		default:
 			return null;
 		}
@@ -50,6 +55,8 @@ public enum EvaluationTable {
 		case GENERAL_EVALUATION_TABLE:
 			return new ColumnType[] { ColumnType.TIMESTAMP, ColumnType.NUMBER_OF_ACTIVE_NODES, ColumnType.NUMBER_OF_RUNNING_JOBS, ColumnType.TOTAL_EC, ColumnType.IT_POWER, ColumnType.HVAC_EC,
 					ColumnType.JOB_POWER, ColumnType.ENERGY_COST, ColumnType.SLA_COST };
+		case FINISHED_JOB_INFO_TABLE:
+			return new ColumnType[] {ColumnType.TIMESTAMP, ColumnType.JOB_START_TIME, ColumnType.JOB_FINISH_TIME, ColumnType.JOB_LENGTH_IN_SECONDS, ColumnType.JOB_DELAY_IN_SECONDS};
 		default:
 			return null;
 		

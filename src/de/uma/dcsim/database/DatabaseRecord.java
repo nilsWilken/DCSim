@@ -71,7 +71,7 @@ public class DatabaseRecord {
 		EvaluationTable[] tables = EvaluationTable.values();
 		boolean allFound = true;
 		ColumnType[] tableSchema = null;
-		for(int i=0; i < tables.length-1; i++) {
+		for(int i=0; i < tables.length; i++) {
 			tableSchema = EvaluationTable.getTableSchema(tables[i]);
 			allFound = true;
 			try {
@@ -89,10 +89,11 @@ public class DatabaseRecord {
 				break;
 			}
 		}
-		if(tableSchema == null) {
-			tableSchema = EvaluationTable.getTableSchema(tables[tables.length-1]);
-			this.evaluationTable = tables[tables.length-1];
-		}
+//		if(tableSchema == null) {
+//			System.out.println("Table schema is null!");
+//			tableSchema = EvaluationTable.getTableSchema(tables[tables.length-1]);
+//			this.evaluationTable = tables[tables.length-1];
+//		}
 		
 		//Retrieve the data values from the ResultSet instance
 		try {
@@ -108,6 +109,9 @@ public class DatabaseRecord {
 					break;
 				case LONG:
 					this.values.put(cType, databaseResult.getLong(i));
+					break;
+				case TEXT:
+					this.values.put(cType, databaseResult.getString(i));
 					break;
 				default:
 					break;
@@ -145,6 +149,10 @@ public class DatabaseRecord {
 	public int getInt(ColumnType type) {
 		return ((Integer)this.values.get(type)).intValue();
 	}
+	
+	public String getString(ColumnType type) {
+		return ((String)this.values.get(type));
+	}
 
 	/**
 	 * Converts the record into a string representation. 3
@@ -164,6 +172,8 @@ public class DatabaseRecord {
 			case LONG:
 				result += this.getLong(tableSchema[i]);
 				break;
+			case TEXT:
+				result += this.getString(tableSchema[i]);
 			default:
 				break;
 			

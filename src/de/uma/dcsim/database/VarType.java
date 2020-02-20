@@ -9,5 +9,6 @@ public enum VarType {
 
 	LONG,
 	DOUBLE,
-	INT;
+	INT,
+	TEXT;
 }

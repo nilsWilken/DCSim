@@ -12,6 +12,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 
+import de.uma.dcsim.database.ColumnType;
+import de.uma.dcsim.database.EvaluationTable;
 import de.uma.dcsim.database.StatisticType;
 
 /**
@@ -133,7 +135,14 @@ public class EvaluationSetup {
 					columnNames.add(this.dbNames.get(i) + specification.getEvaluationColumnName());
 					break;
 				case ALL_RECORDS:
-					writeList(evaluator.getAllRecords(specification.getEvaluationTable(), start, end, specification.getColumn(), this.dateFormat), outputPath + "/" + evaluationName + "/" + this.dbNames.get(i) + "_" + specification.getEvaluationColumnName() + "_allRecords.csv");
+					ArrayList<ArrayList<String>> recordsLists = new ArrayList<ArrayList<String>>();
+					ArrayList<String> recordsList;
+					for(ColumnType cType : specification.getColumnTypes()) {
+						recordsList = evaluator.getAllRecords(specification.getEvaluationTable(), start, end, cType, this.dateFormat);
+						recordsLists.add(recordsList);
+					}
+					EvaluationSetup.writeLists(recordsLists, specification.getEvaluationColumnNames(), this.outputPath + "/" + this.evaluationName + "/" + this.dbNames.get(i) + "_" + EvaluationTable.getTableName(specification.getEvaluationTable()) + "_allRecords.csv");
+//					writeList(evaluator.getAllRecords(specification.getEvaluationTable(), start, end, specification.getColumn(), this.dateFormat), outputPath + "/" + evaluationName + "/" + this.dbNames.get(i) + "_" + specification.getEvaluationColumnName() + "_allRecords.csv");
 					break;
 				case TOTAL_SUM:
 					double sum = evaluator.getTotalSum(specification.getEvaluationTable(), start, end, specification.getColumn());
@@ -163,7 +172,8 @@ public class EvaluationSetup {
 			writer = new BufferedWriter(new FileWriter(new File(path)));
 			
 			for(String value : values) {
-				writer.write(value.replace(".", ","));
+//				writer.write(value.replace(".", ","));
+				writer.write(value);
 				writer.newLine();
 			}
 			
@@ -191,9 +201,45 @@ public class EvaluationSetup {
 			
 			for(int i=0; i < valueLists.get(0).size(); i++) {
 				buff = new StringBuffer();
-				buff.append(timeStrings.get(i) + ";");
+				if(timeStrings != null) {
+					buff.append(timeStrings.get(i) + ";");
+				}
 				for(int j = 0; j < valueLists.size(); j++) {
 					buff.append(("" + valueLists.get(j).get(i)).replace(".", ","));
+					if(j+1 != valueLists.size()) {
+						buff.append(";");
+					}
+				}
+				writer.write(buff.toString());
+				writer.newLine();
+			}
+			
+			writer.close();
+		}catch(IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private static void writeLists(ArrayList<ArrayList<String>> valueLists, List<String> columnNames, String path) {
+		BufferedWriter writer;
+		
+		try {
+			writer = new BufferedWriter(new FileWriter(new File(path)));
+			
+			StringBuffer buff = new StringBuffer();
+			for(int i=0; i < columnNames.size(); i++) {
+				buff.append(columnNames.get(i));
+				if(i+1 != columnNames.size()) {
+					buff.append(";");
+				}
+			}
+			writer.write(buff.toString());
+			writer.newLine();
+			
+			for(int i=0; i < valueLists.get(0).size(); i++) {
+				buff = new StringBuffer();
+				for(int j = 0; j < valueLists.size(); j++) {
+					buff.append(("" + valueLists.get(j).get(i)));
 					if(j+1 != valueLists.size()) {
 						buff.append(";");
 					}

@@ -82,7 +82,15 @@ public enum ColumnType {
 	/**
 	 * Fraction of node steps that were actually shifted during a DR event response.
 	 */
-	ACTUALLY_SHIFTED_NODESTEP_FRACTION;
+	ACTUALLY_SHIFTED_NODESTEP_FRACTION,
+	
+	JOB_LENGTH_IN_SECONDS,
+	
+	JOB_DELAY_IN_SECONDS,
+	
+	JOB_START_TIME,
+	
+	JOB_FINISH_TIME;
 	
 	/**
 	 * This method converts a value of ColumnType to the text name that should be used within the database.
@@ -121,6 +129,14 @@ public enum ColumnType {
 			return "averageNodesPerJob";
 		case ACTUALLY_SHIFTED_NODESTEP_FRACTION:
 			return "actuallyShiftedNodestepFraction";
+		case JOB_LENGTH_IN_SECONDS:
+			return "jobLengthInSeconds";
+		case JOB_DELAY_IN_SECONDS:
+			return "jobDelayInSeconds";
+		case JOB_START_TIME:
+			return "jobStartTime";
+		case JOB_FINISH_TIME:
+			return "jobFinishTime";
 		default:
 			return "";
 		}
@@ -212,6 +228,14 @@ public enum ColumnType {
 			return "real";
 		case ACTUALLY_SHIFTED_NODESTEP_FRACTION:
 			return "real";
+		case JOB_LENGTH_IN_SECONDS:
+			return "int(8)";
+		case JOB_DELAY_IN_SECONDS:
+			return "int(8)";
+		case JOB_START_TIME:
+			return "int(8)";
+		case JOB_FINISH_TIME:
+			return "int(8)";
 		default:
 			return "";
 		}
@@ -254,8 +278,61 @@ public enum ColumnType {
 			return VarType.DOUBLE;
 		case ACTUALLY_SHIFTED_NODESTEP_FRACTION:
 			return VarType.DOUBLE;
+		case JOB_LENGTH_IN_SECONDS:
+			return VarType.LONG;
+		case JOB_DELAY_IN_SECONDS:
+			return VarType.LONG;
+		case JOB_START_TIME:
+			return VarType.LONG;
+		case JOB_FINISH_TIME:
+			return VarType.LONG;
 		default:
 			return null;
+		}
+	}
+	
+	public static boolean isDateValue(ColumnType type) {
+		switch(type) {
+		case TIMESTAMP:
+			return true;
+		case TOTAL_EC:
+			return false;
+		case IT_POWER:
+			return false;
+		case HVAC_EC:
+			return false;
+		case JOB_POWER:
+			return false;
+		case ENERGY_COST:
+			return false;
+		case SLA_COST:
+			return false;
+		case NUMBER_OF_ACTIVE_NODES:
+			return false;
+		case NUMBER_OF_RUNNING_JOBS:
+			return false;
+		case OPTIMAL_SCALING_FREQUENCY:
+			return false;
+		case OPTIMAL_SHIFTING_FRACTION:
+			return false;
+		case MAXIMUM_POWER_PROVISION:
+			return false;
+		case AVERAGE_REMAINING_RUNTIME:
+			return false;
+		case AVERAGE_NODES_PER_JOB:
+			return false;
+		case ACTUALLY_SHIFTED_NODESTEP_FRACTION:
+			return false;
+		case JOB_LENGTH_IN_SECONDS:
+			return false;
+		case JOB_DELAY_IN_SECONDS:
+			return false;
+		case JOB_START_TIME:
+			return true;
+		case JOB_FINISH_TIME:
+			return true;
+		default:
+			return false;
 		}
 	}
 	

@@ -1,5 +1,7 @@
 package de.uma.dcsim.evaluation;
 
+import java.util.List;
+
 import de.uma.dcsim.database.ColumnType;
 import de.uma.dcsim.database.EvaluationTable;
 
@@ -15,6 +17,8 @@ public class EvaluationSpecification {
 	 */
 	private ColumnType column;
 	
+	private List<ColumnType> columnTypes;
+	
 	/**
 	 * Indicates the type of this evaluation element.
 	 */
@@ -25,16 +29,20 @@ public class EvaluationSpecification {
 	 */
 	private String evaluationColumnName;
 	
+	private List<String> evaluationColumnNames;
+	
 	/**
 	 * Indicates the unique table prefix of the table that is affected by this evaluation element.
 	 */
 	private EvaluationTable evaluationTable;
 
-	public EvaluationSpecification(ColumnType column, EvaluationType evaluationType, String evaluationColumnName, EvaluationTable evaluationTable) {
+	public EvaluationSpecification(ColumnType column, List<ColumnType> columnTypes, EvaluationType evaluationType, String evaluationColumnName, List<String> evaluationColumnNames, EvaluationTable evaluationTable) {
 		super();
 		this.column = column;
+		this.columnTypes = columnTypes;
 		this.evaluationType = evaluationType;
 		this.evaluationColumnName = evaluationColumnName;
+		this.evaluationColumnNames = evaluationColumnNames;
 		this.evaluationTable = evaluationTable;
 	}
 	
@@ -44,6 +52,10 @@ public class EvaluationSpecification {
 
 	public void setColumn(ColumnType column) {
 		this.column = column;
+	}
+	
+	public List<ColumnType> getColumnTypes() {
+		return this.columnTypes;
 	}
 
 	public EvaluationType getEvaluationType() {
@@ -56,6 +68,10 @@ public class EvaluationSpecification {
 
 	public String getEvaluationColumnName() {
 		return evaluationColumnName;
+	}
+	
+	public List<String> getEvaluationColumnNames() {
+		return this.evaluationColumnNames;
 	}
 
 	public void setEvaluationColumnName(String evaluationColumnName) {

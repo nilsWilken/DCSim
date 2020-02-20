@@ -68,18 +68,33 @@ public class EvaluationSetupParser {
 	private static List<EvaluationSpecification> parseEvaluationSpecifications(List<Element> evaluationSpecifications) {
 		List<EvaluationSpecification> result = new ArrayList<EvaluationSpecification>();
 		
-		ColumnType columnType;
+		ColumnType columnType = null;
+		List<ColumnType> columnTypes = null;
 		EvaluationType evaluationType;
-		String columnName;
+		String columnName = null;
+		List<String> columnNames = null;
 		EvaluationTable evaluationTable;
 		
 		for(Element evaluationSpec : evaluationSpecifications) {
 			columnType = ColumnType.parseFromString(evaluationSpec.getChild("ColumnType").getText());
 			evaluationType = EvaluationType.parseFromString(evaluationSpec.getChild("EvaluationType").getText());
-			columnName = evaluationSpec.getChild("EvaluationColumnName").getText();
+			
+			if(evaluationType == EvaluationType.ALL_RECORDS) {
+				columnNames = new ArrayList<String>();
+				columnTypes = new ArrayList<ColumnType>();
+				for(Element cName : evaluationSpec.getChildren("EvaluationColumnName")) {
+					columnNames.add(cName.getText());
+				}
+				for(Element cType : evaluationSpec.getChildren("ColumnType")) {
+					columnTypes.add(ColumnType.parseFromString(cType.getText()));
+				}
+			}
+			else {
+				columnName = evaluationSpec.getChild("EvaluationColumnName").getText();
+			}
 			evaluationTable = EvaluationTable.parseFromString(evaluationSpec.getChild("EvaluationTable").getText());
 			
-			result.add(new EvaluationSpecification(columnType, evaluationType, columnName, evaluationTable));
+			result.add(new EvaluationSpecification(columnType, columnTypes, evaluationType, columnName, columnNames, evaluationTable));
 		}
 		
 		return result;

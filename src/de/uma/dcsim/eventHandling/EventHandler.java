@@ -4,8 +4,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import de.uma.dcsim.database.ColumnType;
+import de.uma.dcsim.database.DatabaseRecord;
+import de.uma.dcsim.database.EvaluationTable;
 import de.uma.dcsim.hardware.DC;
 import de.uma.dcsim.hardware.Server;
+import de.uma.dcsim.simulationControl.DCSimCore;
 import de.uma.dcsim.simulationControl.Setup;
 import de.uma.dcsim.utilities.BatchJob;
 import de.uma.dcsim.utilities.BatchJobStatus;
@@ -59,6 +63,8 @@ public class EventHandler {
 	 * DC to which this EventHandler belongs.
 	 */
 	private DC handledDC;
+	
+	private ColumnType[] jobInfoTableSchema = EvaluationTable.getTableSchema(EvaluationTable.FINISHED_JOB_INFO_TABLE);
 	
 	public EventHandler(DC handledDC) {
 		this.handledDC = handledDC;
@@ -299,6 +305,13 @@ public class EventHandler {
 			}
 			j.assignServers(null);
 			this.handledDC.handledEvent(event);
+			
+			long lengthInSeconds = (j.getActualFinishingTime() - j.getScheduledStartTime())*Setup.secondsPerSimulationTimestep;
+			long startTime = (this.handledDC.getSimStartTime().getTime())+(j.getScheduledStartTime()*Setup.secondsPerSimulationTimestep*1000);
+			long finishTime = (this.handledDC.getSimStartTime().getTime())+(j.getActualFinishingTime()*Setup.secondsPerSimulationTimestep*1000);
+			Object[] values = new Object[] {this.handledDC.getCurrentDate().getTime(), startTime, finishTime, lengthInSeconds, (long)(j.getFinishingDelayInSimulationTime()*Setup.secondsPerSimulationTimestep)};
+			DatabaseRecord dRecord = new DatabaseRecord(this.jobInfoTableSchema, values);
+			(DCSimCore.getDBHandler()).insertRecord(dRecord);
 			
 			this.currentSLACost += j.calculateSLACosts(Setup.usagePrice);
 		}
