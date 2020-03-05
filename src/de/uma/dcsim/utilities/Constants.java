@@ -6,6 +6,8 @@ import java.util.TimeZone;
 
 public class Constants {
 	
+	public static final String DECIMAL_SEPARATOR = ",";
+	
 	public static final SimpleDateFormat getDateFormat() {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss", Locale.GERMAN);
 		dateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));

@@ -54,7 +54,7 @@ public class SimulationEvaluator {
 	 * @param column Column of the table for which all recorded values in the specified interval are returned.
 	 * @return List of strings, where each string contains the evaluation record (including times of the records) entry for all data values of the specified column that lie between the specified dates.
 	 */
-	public ArrayList<String> getAllRecords(EvaluationTable evaluationTable, Date startDate, Date endDate, ColumnType column, SimpleDateFormat dateFormat) {
+	public ArrayList<String> getAllRecords(EvaluationTable evaluationTable, Date startDate, Date endDate, ColumnType column, SimpleDateFormat dateFormat, String decimalSeparator) {
 		ArrayList<DatabaseRecord> records = this.dbHandler.getRecordsBetweenDates(evaluationTable, startDate, endDate);
 		ArrayList<String> result = new ArrayList<String>();
 		StringBuffer buff;
@@ -63,7 +63,7 @@ public class SimulationEvaluator {
 //			buff.append(dateFormat.format(new Date(record.getLong(ColumnType.TIMESTAMP))) + ";");
 			switch(ColumnType.getJavaVarType(column)) {
 			case DOUBLE:
-				buff.append(""+record.getDouble(column));
+				buff.append((""+record.getDouble(column)).replace(".", decimalSeparator));
 				break;
 			case INT:
 				buff.append(""+record.getInt(column));

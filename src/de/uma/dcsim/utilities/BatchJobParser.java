@@ -1,15 +1,16 @@
 package de.uma.dcsim.utilities;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import de.uma.dcsim.simulationControl.Setup;
 
@@ -48,7 +49,7 @@ public class BatchJobParser {
 	 * @param simStartDate Start date of the current simulation.
 	 * @return List of all jobs that were parsed from the provided file.
 	 */
-	public List<BatchJob> parseJobFile(String fileName, Date simStartDate) {
+	public static List<BatchJob> parseJobFile(String fileName, Date simStartDate) {
 		ArrayList<BatchJob> result = new ArrayList<BatchJob>();
 		
 		
@@ -73,7 +74,7 @@ public class BatchJobParser {
 				BatchJob parsedJob;
 				int lineNumber = 0;
 				while((line=reader.readLine()) != null) {
-					if((parsedJob=this.parseJobCSVLine(line, ++lineNumber, simStartDate)) != null) {
+					if((parsedJob=BatchJobParser.parseJobCSVLine(line, ++lineNumber, simStartDate)) != null) {
 						result.add(parsedJob);
 //						writer.write(INPUT_DATE_FORMAT.format(new Date(simStartDate.getTime() + ((long)parsedJob.getSLADeadline()*1000L))));
 //						writer.newLine();
@@ -107,7 +108,7 @@ public class BatchJobParser {
 	 * @param lineNumber
 	 * @return 
 	 */
-	private BatchJob parseJobCSVLine(String csvLine, int lineNumber, Date simStartDate) {
+	private static BatchJob parseJobCSVLine(String csvLine, int lineNumber, Date simStartDate) {
 		
 		String[] split = csvLine.split(CSV_SEPARATOR);
 		
@@ -217,6 +218,51 @@ public class BatchJobParser {
 		}
 		
 		return null;
+	}
+	
+	public static void writeBatchJobFile(String outputPath, List<BatchJob> jobs, Date simStartTime) {
+		BufferedWriter out;
+		StringBuffer buff;
+		try {
+			out = new BufferedWriter(new FileWriter(outputPath));
+			out.write("Job ID" + BatchJobParser.CSV_SEPARATOR + "Frequency" + BatchJobParser.CSV_SEPARATOR + "Number of Nodes" + BatchJobParser.CSV_SEPARATOR + "APC/Node" + BatchJobParser.CSV_SEPARATOR + "Submission Time" + BatchJobParser.CSV_SEPARATOR + "Start Time" + BatchJobParser.CSV_SEPARATOR + "End Time" + BatchJobParser.CSV_SEPARATOR + "SLA Deadline" + BatchJobParser.CSV_SEPARATOR + "Job Class");
+			out.newLine();
+			
+			Date submissionTime;
+			Date startTime;
+			Date endTime;
+			Date slaDeadline;
+			
+			for(BatchJob job : jobs) {
+				submissionTime = new Date((long)((long)job.getSubmissionTime()*(long)Setup.secondsPerSimulationTimestep*1000L));
+				submissionTime.setTime(submissionTime.getTime() + simStartTime.getTime());
+				startTime = new Date((long)((long)job.getStartTime()*(long)Setup.secondsPerSimulationTimestep*1000L));
+				startTime.setTime(startTime.getTime() + simStartTime.getTime());
+				endTime = new Date(startTime.getTime()+(long)((long)job.getDurationInSimulationTime()*(long)Setup.secondsPerSimulationTimestep*1000L));
+				slaDeadline = new Date((long)((long)job.getSLADeadline()*(long)Setup.secondsPerSimulationTimestep*1000L));
+				slaDeadline.setTime(slaDeadline.getTime() + simStartTime.getTime());
+				
+				
+				buff = new StringBuffer();
+				buff.append(job.getId() + BatchJobParser.CSV_SEPARATOR);
+				buff.append(job.getFrequency() + BatchJobParser.CSV_SEPARATOR);
+				buff.append(job.getAmountOfServers() + BatchJobParser.CSV_SEPARATOR);
+				buff.append(job.getParsedAveragePowerConsumption() + BatchJobParser.CSV_SEPARATOR);
+				buff.append(INPUT_DATE_FORMAT.format(submissionTime) + BatchJobParser.CSV_SEPARATOR);
+				buff.append(INPUT_DATE_FORMAT.format(startTime) + BatchJobParser.CSV_SEPARATOR);
+				buff.append(INPUT_DATE_FORMAT.format(endTime) + BatchJobParser.CSV_SEPARATOR);
+				buff.append(INPUT_DATE_FORMAT.format(slaDeadline) + BatchJobParser.CSV_SEPARATOR);
+				buff.append(job.getJobClass() + "");
+				
+				out.write(buff.toString());
+				out.newLine();
+			}
+			
+			out.flush();
+			out.close();
+		}catch(IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 }

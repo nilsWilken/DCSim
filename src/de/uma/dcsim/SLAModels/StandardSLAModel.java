@@ -4,7 +4,7 @@ import java.util.Random;
 
 public class StandardSLAModel implements SLAModel {
 	
-	public int createDeadline(int scheduledStartTime, double duration) {
+	public int createDeadline(int scheduledStartTime, double duration, double durationFactor) {
 		int deadline = scheduledStartTime;
 		
 		//Add job execution time
@@ -13,7 +13,7 @@ public class StandardSLAModel implements SLAModel {
 		//Add puffer time
 		Random rand = new Random();
 		double delta = rand.nextDouble()*2.0;
-		deadline = deadline + (int)(duration*delta);
+		deadline = deadline + (int)(durationFactor*(duration*delta));
 		
 		return deadline;
 	}

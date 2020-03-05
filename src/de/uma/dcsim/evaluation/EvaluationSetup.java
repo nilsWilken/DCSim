@@ -71,8 +71,10 @@ public class EvaluationSetup {
 	 */
 	private List<EvaluationSpecification> evaluationColumns;
 	
+	private String decimalSeparator;
 	
-	public EvaluationSetup(String evaluationName, String dbPath, String outputPath, List<String> dbNames, String dateFormatString, String startDate, String endDate, String millisecondsPerAggregationInterval, List<EvaluationSpecification> specifications) {
+	
+	public EvaluationSetup(String evaluationName, String dbPath, String outputPath, List<String> dbNames, String dateFormatString, String startDate, String endDate, String millisecondsPerAggregationInterval, List<EvaluationSpecification> specifications, String decimalSeparator) {
 		this.dbPath = dbPath;
 		this.outputPath = outputPath;
 		this.dbNames = dbNames;
@@ -82,6 +84,7 @@ public class EvaluationSetup {
 		this.millisecondsPerAggregationInterval = Integer.parseInt(millisecondsPerAggregationInterval);
 		this.evaluationName = evaluationName;
 		this.evaluationColumns = specifications;
+		this.decimalSeparator = decimalSeparator;
 	}
 
 	public void evaluate() {
@@ -138,15 +141,15 @@ public class EvaluationSetup {
 					ArrayList<ArrayList<String>> recordsLists = new ArrayList<ArrayList<String>>();
 					ArrayList<String> recordsList;
 					for(ColumnType cType : specification.getColumnTypes()) {
-						recordsList = evaluator.getAllRecords(specification.getEvaluationTable(), start, end, cType, this.dateFormat);
+						recordsList = evaluator.getAllRecords(specification.getEvaluationTable(), start, end, cType, this.dateFormat, this.decimalSeparator);
 						recordsLists.add(recordsList);
 					}
-					EvaluationSetup.writeLists(recordsLists, specification.getEvaluationColumnNames(), this.outputPath + "/" + this.evaluationName + "/" + this.dbNames.get(i) + "_" + EvaluationTable.getTableName(specification.getEvaluationTable()) + "_allRecords.csv");
+					this.writeLists(recordsLists, specification.getEvaluationColumnNames(), this.outputPath + "/" + this.evaluationName + "/" + this.dbNames.get(i) + "_" + EvaluationTable.getTableName(specification.getEvaluationTable()) + "_allRecords.csv");
 //					writeList(evaluator.getAllRecords(specification.getEvaluationTable(), start, end, specification.getColumn(), this.dateFormat), outputPath + "/" + evaluationName + "/" + this.dbNames.get(i) + "_" + specification.getEvaluationColumnName() + "_allRecords.csv");
 					break;
 				case TOTAL_SUM:
 					double sum = evaluator.getTotalSum(specification.getEvaluationTable(), start, end, specification.getColumn());
-					totalSums.add(specification.getEvaluationColumnName() + "_" + this.dbNames.get(i) + ";" + sum);
+					totalSums.add(specification.getEvaluationColumnName() + "_" + this.dbNames.get(i) + ";" + (""+sum).replace(".", this.decimalSeparator));
 					break;
 				default:
 					break;
@@ -157,7 +160,7 @@ public class EvaluationSetup {
 		}
 		//Write output files
 		if(valueLists.size() > 0) {
-			EvaluationSetup.writeLists(valueLists, columnNames, times, outputPath + "/" + evaluationName + "/aggregatedStatistics_" + (millisecondsPerAggregationInterval/60000) + "min.csv");
+			this.writeLists(valueLists, columnNames, times, outputPath + "/" + evaluationName + "/aggregatedStatistics_" + (millisecondsPerAggregationInterval/60000) + "min.csv");
 		}
 		if(totalSums.size() > 1) {
 			EvaluationSetup.writeList(totalSums, outputPath + "/" + evaluationName + "/totalSums.csv");
@@ -183,7 +186,7 @@ public class EvaluationSetup {
 		}
 	}
 	
-	private static void writeLists(ArrayList<ArrayList<Double>> valueLists, ArrayList<String> columnNames, ArrayList<String> timeStrings, String path) {
+	private void writeLists(ArrayList<ArrayList<Double>> valueLists, ArrayList<String> columnNames, ArrayList<String> timeStrings, String path) {
 		BufferedWriter writer;
 		
 		try {
@@ -205,7 +208,7 @@ public class EvaluationSetup {
 					buff.append(timeStrings.get(i) + ";");
 				}
 				for(int j = 0; j < valueLists.size(); j++) {
-					buff.append(("" + valueLists.get(j).get(i)).replace(".", ","));
+					buff.append(("" + valueLists.get(j).get(i)).replace(".", this.decimalSeparator));
 					if(j+1 != valueLists.size()) {
 						buff.append(";");
 					}
@@ -220,7 +223,7 @@ public class EvaluationSetup {
 		}
 	}
 	
-	private static void writeLists(ArrayList<ArrayList<String>> valueLists, List<String> columnNames, String path) {
+	private void writeLists(ArrayList<ArrayList<String>> valueLists, List<String> columnNames, String path) {
 		BufferedWriter writer;
 		
 		try {

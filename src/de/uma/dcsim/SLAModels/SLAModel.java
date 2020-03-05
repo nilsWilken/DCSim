@@ -15,7 +15,7 @@ public interface SLAModel {
 	 * @param duration Runtime of a job with its original run configuration.
 	 * @return SLA deadline in simulation time.
 	 */
-	public int createDeadline(int scheduledStartTime, double duration);
+	public int createDeadline(int scheduledStartTime, double duration, double durationFactor);
 	
 	/**
 	 * Calculates the SLA fee of a job.

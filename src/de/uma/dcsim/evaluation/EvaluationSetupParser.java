@@ -13,10 +13,11 @@ import org.jdom2.input.SAXBuilder;
 
 import de.uma.dcsim.database.ColumnType;
 import de.uma.dcsim.database.EvaluationTable;
+import de.uma.dcsim.utilities.Constants;
 
 public class EvaluationSetupParser {
 	
-	private static final String[] evaluationSetupElements = {"EvaluationName", "DatabasePath", "OutputPath", "DateFormatString", "EvaluationStartDate", "EvaluationEndDate", "MillisecondsPerAggregationInterval"};
+	private static final String[] evaluationSetupElements = {"EvaluationName", "DatabasePath", "OutputPath", "DateFormatString", "EvaluationStartDate", "EvaluationEndDate", "MillisecondsPerAggregationInterval", "DecimalSeparator"};
 	
 	public static EvaluationSetup parseEvaluationSetup(String path) {
 		
@@ -49,7 +50,13 @@ public class EvaluationSetupParser {
 				String endDate = parsedElements.get("EvaluationEndDate").getText();
 				String millisecondsPerAggregationInterval = parsedElements.get("MillisecondsPerAggregationInterval").getText();
 				
-				return new EvaluationSetup(evaluationName, dbPath, outputPath, parsedDBNames, dateFormatString, startDate, endDate, millisecondsPerAggregationInterval, parsedEvaluationSpecifications);
+				String decimalSeparator = Constants.DECIMAL_SEPARATOR;
+				if(parsedElements.get("DecimalSeparator") != null) {
+					decimalSeparator = parsedElements.get("DecimalSeparator").getText();
+				}
+				
+				
+				return new EvaluationSetup(evaluationName, dbPath, outputPath, parsedDBNames, dateFormatString, startDate, endDate, millisecondsPerAggregationInterval, parsedEvaluationSpecifications, decimalSeparator);
 				
 				
 			}

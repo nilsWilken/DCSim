@@ -173,7 +173,7 @@ public class Setup {
 	 */
 	private static final SimpleDateFormat INPUT_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.GERMAN);
 	
-	public static double usagePrice = 0.36;
+	public static double usagePrice = 0;
 
 	public Setup() {
 		this.hosts = new ArrayList<Server>();

@@ -62,8 +62,8 @@ public class Scheduler {
 		this.handledDC = handledDC;
 		this.scheduledJobs = new ArrayList<BatchJob>();
 		this.submittedJobs = new ArrayList<BatchJob>();
-//		this.schedulingStrategy = new FirstInFirstOutScheduling();
-		this.schedulingStrategy = new ShortestTimeToDeadlineFirst();
+		this.schedulingStrategy = new FirstInFirstOutScheduling();
+//		this.schedulingStrategy = new ShortestTimeToDeadlineFirst();
 //		this.schedulingStrategy = new ScheduleForMinimumCost(86400, 300);
 		
 //		if(Setup.superMUCMode) {
@@ -148,8 +148,8 @@ public class Scheduler {
 		//If superMUCMode is on, try to schedule the jobs at the point in simulation time that is specified in the workload trace
 		if(Setup.superMUCMode) {
 //			Retrieve backfilling deadline from the scheduling strategy
-			int backfillingDeadline = ((ShortestTimeToDeadlineFirst)this.schedulingStrategy).getBackfillingFinishingDeadline();
-//			int backfillingDeadline = ((FirstInFirstOutScheduling)this.schedulingStrategy).getBackfillingFinishingDeadline();
+//			int backfillingDeadline = ((ShortestTimeToDeadlineFirst)this.schedulingStrategy).getBackfillingFinishingDeadline();
+			int backfillingDeadline = ((FirstInFirstOutScheduling)this.schedulingStrategy).getBackfillingFinishingDeadline();
 			
 			//date object that represents the end of the scheduling interval
 			int intervalEnd = currentTime + schedulingIntervalLength;

@@ -223,8 +223,8 @@ public class BatchJob {
 	 * @return SLA costs of the job.
 	 */
 	public double calculateSLACosts(double usagePrice) {
-		usagePrice = (usagePrice*this.amountOfServers)*((this.duration*Setup.secondsPerSimulationTimestep)/3600);
-		return this.slaModel.calculateSLAFee((this.delay/this.duration), usagePrice);
+		usagePrice = (usagePrice*(double)this.amountOfServers)*(((double)this.duration*(double)Setup.secondsPerSimulationTimestep)/3600.0);
+		return this.slaModel.calculateSLAFee(((double)this.delay/(double)this.duration), usagePrice);
 	}
 	
 	/**
@@ -235,13 +235,13 @@ public class BatchJob {
 	 * @return Estimated SLA costs of the job.
 	 */
 	public double getCurrentlyCausedSLACosts(double usagePrice) {
-		usagePrice = (usagePrice*this.amountOfServers)*((this.duration*Setup.secondsPerSimulationTimestep)/3600);
+		usagePrice = (usagePrice*(double)this.amountOfServers)*(((double)this.duration*(double)Setup.secondsPerSimulationTimestep)/3600.0);
 		int delay = this.calculateFinishTime() - this.slaDeadline;
 		if(delay <= 0) {
 			return 0;
 		}
 		else {
-			return this.slaModel.calculateSLAFee((delay/this.duration), usagePrice);
+			return this.slaModel.calculateSLAFee(((double)delay/(double)this.duration), usagePrice);
 		}
 	}
 	

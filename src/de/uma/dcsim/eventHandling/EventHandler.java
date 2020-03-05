@@ -59,6 +59,8 @@ public class EventHandler {
 	 */
 	private double currentSLACost;
 	
+	private int currentSLACostTimestamp;
+	
 	/**
 	 * DC to which this EventHandler belongs.
 	 */
@@ -69,6 +71,7 @@ public class EventHandler {
 	public EventHandler(DC handledDC) {
 		this.handledDC = handledDC;
 		this.serverJobMapping = new HashMap<Integer, String>();
+		this.currentSLACostTimestamp = 0;
 		
 		this.occupiedServer = new ArrayList<Server>(this.getOccupiedServers(handledDC.getServer()));
 		this.idleServer = new ArrayList<Server>(this.getIdleServers(handledDC.getServer()));
@@ -144,7 +147,9 @@ public class EventHandler {
 	}
 	 
 	public double getCurrentSLACost() {
-		return this.currentSLACost;
+		double cSLACost = this.currentSLACost;
+		this.currentSLACost = 0;
+		return cSLACost;
 	}
 	
 	/**
@@ -273,7 +278,10 @@ public class EventHandler {
 	 * @param currentTime Point in simulation time for which the job finish events should be handled.
 	 */
 	private void handleJobFinishEvents(int currentTime) {
-		this.currentSLACost = 0;
+		if(this.handledDC.getClock() > this.currentSLACostTimestamp) {
+			this.currentSLACost = 0;
+			this.currentSLACostTimestamp = this.handledDC.getClock();
+		}
 		List<Event> jobFinishEventList = handledDC.getJobFinishEvents(currentTime);
 		List<Event> jobFinishEventListQ = new ArrayList<Event>(jobFinishEventList);
 		
@@ -306,12 +314,15 @@ public class EventHandler {
 			j.assignServers(null);
 			this.handledDC.handledEvent(event);
 			
-			long lengthInSeconds = (j.getActualFinishingTime() - j.getScheduledStartTime())*Setup.secondsPerSimulationTimestep;
-			long startTime = (this.handledDC.getSimStartTime().getTime())+(j.getScheduledStartTime()*Setup.secondsPerSimulationTimestep*1000);
-			long finishTime = (this.handledDC.getSimStartTime().getTime())+(j.getActualFinishingTime()*Setup.secondsPerSimulationTimestep*1000);
-			Object[] values = new Object[] {this.handledDC.getCurrentDate().getTime(), startTime, finishTime, lengthInSeconds, (long)(j.getFinishingDelayInSimulationTime()*Setup.secondsPerSimulationTimestep)};
-			DatabaseRecord dRecord = new DatabaseRecord(this.jobInfoTableSchema, values);
-			(DCSimCore.getDBHandler()).insertRecord(dRecord);
+			long lengthInSeconds = ((long)j.getActualFinishingTime() - (long)j.getScheduledStartTime())*(long)Setup.secondsPerSimulationTimestep;
+			long startTime = ((long)this.handledDC.getSimStartTime().getTime())+((long)j.getScheduledStartTime()*(long)Setup.secondsPerSimulationTimestep*1000);
+			long finishTime = ((long)this.handledDC.getSimStartTime().getTime())+((long)j.getActualFinishingTime()*(long)Setup.secondsPerSimulationTimestep*1000);
+			
+			if(!this.handledDC.isCopy()) {
+				Object[] values = new Object[] {this.handledDC.getCurrentDate().getTime(), startTime, finishTime, lengthInSeconds, (long)((long)j.getFinishingDelayInSimulationTime()*(long)Setup.secondsPerSimulationTimestep)};
+				DatabaseRecord dRecord = new DatabaseRecord(this.jobInfoTableSchema, values);
+				(DCSimCore.getDBHandler()).insertRecord(dRecord);
+			}
 			
 			this.currentSLACost += j.calculateSLACosts(Setup.usagePrice);
 		}
