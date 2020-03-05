@@ -7,8 +7,8 @@ import de.uma.dcsim.eventHandling.EventType;
 import de.uma.dcsim.eventHandling.ServerEvent;
 import de.uma.dcsim.hardware.DC;
 import de.uma.dcsim.hardware.Server;
-import de.uma.dcsim.scheduling.schedulingStrategies.ScheduleForMinimumCost;
 import de.uma.dcsim.scheduling.schedulingStrategies.SchedulingStrategy;
+import de.uma.dcsim.scheduling.schedulingStrategies.SchedulingStrategyType;
 import de.uma.dcsim.scheduling.schedulingStrategies.demandFlexStrategies.DemandFlexibilitySchedulingStrategy;
 import de.uma.dcsim.scheduling.schedulingStrategies.schedulingUtilities.SchedulingStrategyUtilities;
 import de.uma.dcsim.scheduling.schedulingStrategies.timeSortScheduling.FirstInFirstOutScheduling;
@@ -62,7 +62,9 @@ public class Scheduler {
 		this.handledDC = handledDC;
 		this.scheduledJobs = new ArrayList<BatchJob>();
 		this.submittedJobs = new ArrayList<BatchJob>();
-		this.schedulingStrategy = new FirstInFirstOutScheduling();
+		
+		this.schedulingStrategy = SchedulingStrategyType.getSchedulingStrategyByType(Setup.usedSchedulingStrategyType);
+//		this.schedulingStrategy = new FirstInFirstOutScheduling();
 //		this.schedulingStrategy = new ShortestTimeToDeadlineFirst();
 //		this.schedulingStrategy = new ScheduleForMinimumCost(86400, 300);
 		
@@ -149,7 +151,20 @@ public class Scheduler {
 		if(Setup.superMUCMode) {
 //			Retrieve backfilling deadline from the scheduling strategy
 //			int backfillingDeadline = ((ShortestTimeToDeadlineFirst)this.schedulingStrategy).getBackfillingFinishingDeadline();
-			int backfillingDeadline = ((FirstInFirstOutScheduling)this.schedulingStrategy).getBackfillingFinishingDeadline();
+//			int backfillingDeadline = ((FirstInFirstOutScheduling)this.schedulingStrategy).getBackfillingFinishingDeadline();
+			
+			int backfillingDeadline;
+			
+			switch(Setup.usedSchedulingStrategyType) {
+			case SHORTEST_TIME_TO_DEADLINE_FIRST:
+				backfillingDeadline = ((ShortestTimeToDeadlineFirst)this.schedulingStrategy).getBackfillingFinishingDeadline();
+				break;
+			case FIRST_IN_FIRST_OUT:
+				backfillingDeadline = ((FirstInFirstOutScheduling)this.schedulingStrategy).getBackfillingFinishingDeadline();
+				break;
+			default:
+				backfillingDeadline = 0;
+			}
 			
 			//date object that represents the end of the scheduling interval
 			int intervalEnd = currentTime + schedulingIntervalLength;

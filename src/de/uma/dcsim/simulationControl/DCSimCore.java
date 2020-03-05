@@ -22,12 +22,11 @@ package de.uma.dcsim.simulationControl;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-
-import com.sun.org.apache.xerces.internal.impl.xpath.regex.ParseException;
 
 import de.uma.dcsim.database.ColumnType;
 import de.uma.dcsim.database.DatabaseRecord;
@@ -112,8 +111,6 @@ public class DCSimCore {
 					simStart = format.parse("01.01.2014 00:00:00");
 					simEnd = new Date(simStart.getTime() + ((long)length*(long)1000));
 				}catch(ParseException e) {
-					e.printStackTrace();
-				} catch (java.text.ParseException e) {
 					e.printStackTrace();
 				}
 				

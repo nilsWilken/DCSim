@@ -28,7 +28,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 
-import javax.xml.bind.DatatypeConverter;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
@@ -45,11 +44,11 @@ import de.uma.dcsim.hardware.ESF;
 import de.uma.dcsim.hardware.HVAC;
 import de.uma.dcsim.hardware.Server;
 import de.uma.dcsim.pueModels.PUEModelSelector;
+import de.uma.dcsim.scheduling.schedulingStrategies.SchedulingStrategyType;
 import de.uma.dcsim.scheduling.schedulingStrategies.schedulingUtilities.SchedulingStrategyUtilities;
 import de.uma.dcsim.serviceRelatedClasses.VM;
 import de.uma.dcsim.utilities.BatchJob;
 import de.uma.dcsim.utilities.BatchJobParser;
-import de.uma.dcsim.utilities.Constants;
 import de.uma.dcsim.utilities.DRRequest;
 import de.uma.dcsim.utilities.DRRequestParser;
 import de.uma.dcsim.utilities.EnergyPrice;
@@ -174,6 +173,8 @@ public class Setup {
 	private static final SimpleDateFormat INPUT_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.GERMAN);
 	
 	public static double usagePrice = 0;
+	
+	public static SchedulingStrategyType usedSchedulingStrategyType;
 
 	public Setup() {
 		this.hosts = new ArrayList<Server>();
@@ -318,7 +319,7 @@ public class Setup {
 		System.out.println("Parsed start string: " + startTime);
 		c = Calendar.getInstance();
 		INPUT_DATE_FORMAT.setTimeZone(TimeZone.getTimeZone("GMT"));
-		c.setTime(this.INPUT_DATE_FORMAT.parse(startTime));
+		c.setTime(Setup.INPUT_DATE_FORMAT.parse(startTime));
 		//c = DatatypeConverter.parseDateTime(startTime);
 				
 		NodeList simlengthList = doc.getElementsByTagName("SimLength");
@@ -357,6 +358,16 @@ public class Setup {
 						Element dcElement = (Element) dc;
 						String name;
 						double pue = 1.0;
+						
+						NodeList usagePrice = dcElement.getElementsByTagName("UsagePrice");
+						if(usagePrice != null && usagePrice.getLength() > 0) {
+							Setup.usagePrice = Double.parseDouble(((Node) (((Element) usagePrice.item(0)).getChildNodes()).item(0)).getNodeValue().trim());
+						}
+						
+						NodeList schedulingStrategy = dcElement.getElementsByTagName("SchedulingStrategy");
+						if(schedulingStrategy != null && schedulingStrategy.getLength() > 0) {
+							Setup.usedSchedulingStrategyType = SchedulingStrategyType.parseFromString(((Node) (((Element) schedulingStrategy.item(0)).getChildNodes()).item(0)).getNodeValue().trim());
+						}
 
 						NodeList pueList = dcElement
 								.getElementsByTagName("PUE");
@@ -454,8 +465,8 @@ public class Setup {
 
 						HVAC hvacInDC = new HVAC(standardTemp);
 
-						int efficiency = 0;
-						int input = 0;
+//						int efficiency = 0;
+//						int input = 0;
 						ArrayList<ESF> esfs = new ArrayList<ESF>();
 
 						// ------- ESF -------
@@ -702,8 +713,7 @@ public class Setup {
 						
 						
 						//--JOBS--
-						BatchJobParser batchJobParser = new BatchJobParser();
-						ArrayList<BatchJob> jobs = (ArrayList<BatchJob>)batchJobParser.parseJobFile(this.workloadTraceFile, this.c.getTime());
+						ArrayList<BatchJob> jobs = (ArrayList<BatchJob>)BatchJobParser.parseJobFile(this.workloadTraceFile, this.c.getTime());
 						jobs = (ArrayList<BatchJob>) SchedulingStrategyUtilities.sortJobListBySubmissionTime(jobs);
 
 						
