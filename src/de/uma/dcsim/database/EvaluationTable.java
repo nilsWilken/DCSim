@@ -56,7 +56,7 @@ public enum EvaluationTable {
 			return new ColumnType[] { ColumnType.TIMESTAMP, ColumnType.NUMBER_OF_ACTIVE_NODES, ColumnType.NUMBER_OF_RUNNING_JOBS, ColumnType.TOTAL_EC, ColumnType.IT_POWER, ColumnType.HVAC_EC,
 					ColumnType.JOB_POWER, ColumnType.ENERGY_COST, ColumnType.SLA_COST };
 		case FINISHED_JOB_INFO_TABLE:
-			return new ColumnType[] {ColumnType.TIMESTAMP, ColumnType.JOB_START_TIME, ColumnType.JOB_FINISH_TIME, ColumnType.JOB_LENGTH_IN_SECONDS, ColumnType.JOB_DELAY_IN_SECONDS};
+			return new ColumnType[] {ColumnType.TIMESTAMP, ColumnType.JOB_ID, ColumnType.JOB_START_TIME, ColumnType.JOB_FINISH_TIME, ColumnType.JOB_LENGTH_IN_SECONDS, ColumnType.JOB_DELAY_IN_SECONDS, ColumnType.JOB_FREQUENCY};
 		default:
 			return null;
 		

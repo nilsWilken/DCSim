@@ -319,7 +319,7 @@ public class EventHandler {
 			long finishTime = ((long)this.handledDC.getSimStartTime().getTime())+((long)j.getActualFinishingTime()*(long)Setup.secondsPerSimulationTimestep*1000);
 			
 			if(!this.handledDC.isCopy()) {
-				Object[] values = new Object[] {this.handledDC.getCurrentDate().getTime(), startTime, finishTime, lengthInSeconds, (long)((long)j.getFinishingDelayInSimulationTime()*(long)Setup.secondsPerSimulationTimestep)};
+				Object[] values = new Object[] {this.handledDC.getCurrentDate().getTime(), j.getId(), startTime, finishTime, lengthInSeconds, (long)((long)j.getFinishingDelayInSimulationTime()*(long)Setup.secondsPerSimulationTimestep), j.getFrequency()};
 				DatabaseRecord dRecord = new DatabaseRecord(this.jobInfoTableSchema, values);
 				(DCSimCore.getDBHandler()).insertRecord(dRecord);
 			}

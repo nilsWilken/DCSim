@@ -90,7 +90,11 @@ public enum ColumnType {
 	
 	JOB_START_TIME,
 	
-	JOB_FINISH_TIME;
+	JOB_FINISH_TIME,
+	
+	JOB_ID,
+	
+	JOB_FREQUENCY;
 	
 	/**
 	 * This method converts a value of ColumnType to the text name that should be used within the database.
@@ -137,6 +141,10 @@ public enum ColumnType {
 			return "jobStartTime";
 		case JOB_FINISH_TIME:
 			return "jobFinishTime";
+		case JOB_ID:
+			return "jobID";
+		case JOB_FREQUENCY:
+			return "jobFrequency";
 		default:
 			return "";
 		}
@@ -236,6 +244,10 @@ public enum ColumnType {
 			return "int(8)";
 		case JOB_FINISH_TIME:
 			return "int(8)";
+		case JOB_ID:
+			return "text";
+		case JOB_FREQUENCY:
+			return "real";
 		default:
 			return "";
 		}
@@ -286,6 +298,10 @@ public enum ColumnType {
 			return VarType.LONG;
 		case JOB_FINISH_TIME:
 			return VarType.LONG;
+		case JOB_ID:
+			return VarType.TEXT;
+		case JOB_FREQUENCY:
+			return VarType.DOUBLE;
 		default:
 			return null;
 		}
@@ -331,6 +347,10 @@ public enum ColumnType {
 			return true;
 		case JOB_FINISH_TIME:
 			return true;
+		case JOB_ID:
+			return false;
+		case JOB_FREQUENCY:
+			return false;
 		default:
 			return false;
 		}

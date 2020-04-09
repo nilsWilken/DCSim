@@ -162,7 +162,7 @@ public class EvaluationSetup {
 		if(valueLists.size() > 0) {
 			this.writeLists(valueLists, columnNames, times, outputPath + "/" + evaluationName + "/aggregatedStatistics_" + (millisecondsPerAggregationInterval/60000) + "min.csv");
 		}
-		if(totalSums.size() > 1) {
+		if(totalSums.size() > 0) {
 			EvaluationSetup.writeList(totalSums, outputPath + "/" + evaluationName + "/totalSums.csv");
 		}
 
