@@ -290,6 +290,21 @@ public class Setup {
 			Setup.superMUCMode = false;
 		}
 		
+		NodeList usagePrice = doc.getElementsByTagName("UsagePrice");
+		if(usagePrice != null && usagePrice.getLength() > 0) {
+			Setup.usagePrice = Double.parseDouble(((Node) (((Element) usagePrice.item(0)).getChildNodes()).item(0)).getNodeValue().trim());
+		}
+		System.out.println("Usage price: " + Setup.usagePrice);
+		
+		NodeList schedulingStrategy = doc.getElementsByTagName("SchedulingStrategy");
+		if(schedulingStrategy != null && schedulingStrategy.getLength() > 0) {
+			Setup.usedSchedulingStrategyType = SchedulingStrategyType.parseFromString(((Node) (((Element) schedulingStrategy.item(0)).getChildNodes()).item(0)).getNodeValue().trim());
+		}
+		else {
+			Setup.usedSchedulingStrategyType = SchedulingStrategyType.parseFromString("");
+		}
+		System.out.println("Scheduling strategy: " + Setup.usedSchedulingStrategyType);
+		
 		NodeList solverTimeout = doc.getElementsByTagName("SolverTimeout");
 		Setup.solverTimeout = Integer.parseInt(((Node) (((Element) solverTimeout.item(0)).getChildNodes()).item(0)).getNodeValue().trim());
 		
@@ -358,16 +373,6 @@ public class Setup {
 						Element dcElement = (Element) dc;
 						String name;
 						double pue = 1.0;
-						
-						NodeList usagePrice = dcElement.getElementsByTagName("UsagePrice");
-						if(usagePrice != null && usagePrice.getLength() > 0) {
-							Setup.usagePrice = Double.parseDouble(((Node) (((Element) usagePrice.item(0)).getChildNodes()).item(0)).getNodeValue().trim());
-						}
-						
-						NodeList schedulingStrategy = dcElement.getElementsByTagName("SchedulingStrategy");
-						if(schedulingStrategy != null && schedulingStrategy.getLength() > 0) {
-							Setup.usedSchedulingStrategyType = SchedulingStrategyType.parseFromString(((Node) (((Element) schedulingStrategy.item(0)).getChildNodes()).item(0)).getNodeValue().trim());
-						}
 
 						NodeList pueList = dcElement
 								.getElementsByTagName("PUE");
