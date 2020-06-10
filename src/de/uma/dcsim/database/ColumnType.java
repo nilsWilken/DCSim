@@ -2,7 +2,6 @@ package de.uma.dcsim.database;
 
 /**
  * This class intends to represent the different types of columns that are used by the monitoring database.
- * Test
  * 
  * @author nilsw
  *
