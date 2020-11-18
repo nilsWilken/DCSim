@@ -97,7 +97,7 @@ public class HVAC {
 
 //		currentEC = (overallServerEC * (pue - 1) * (1 - ((currentTemperature + minTemp) / 100.0)));
 
-		this.currentPC = PowerModelSelector.getHvacPower(pue, itPowerConsumption);
+		this.currentPC = PowerModelSelector.getHVACPower(pue, itPowerConsumption);
 
 	}
 

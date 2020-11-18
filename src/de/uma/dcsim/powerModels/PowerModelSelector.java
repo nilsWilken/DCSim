@@ -1,8 +1,11 @@
 package de.uma.dcsim.powerModels;
 
 import de.uma.dcsim.powerModels.frequencyBasedServerPowerModels.WekaBasedServerPowerModel;
+import de.uma.dcsim.powerModels.itPowerModels.FractionBasedITPowerModel;
+import de.uma.dcsim.powerModels.itPowerModels.ITPowerModel;
 import de.uma.dcsim.powerModels.pueBasedHVACPowerModels.PUEBasedHVACPowerModel;
 import de.uma.dcsim.powerModels.pueBasedHVACPowerModels.SimplePUEBasedHVACPowerModel;
+import de.uma.dcsim.simulationControl.Setup;
 
 
 /**
@@ -23,7 +26,12 @@ public class PowerModelSelector {
 	/**
 	 * Power model which is used to determine the HVAC power consumption.
 	 */
-	private static PUEBasedHVACPowerModel hvacPowerModel = new SimplePUEBasedHVACPowerModel();
+	private static PUEBasedHVACPowerModel HVACPowerModel = new SimplePUEBasedHVACPowerModel();
+	
+	/**
+	 * ITPowerModel that is used to determine the IT power consumption.
+	 */
+	private static ITPowerModel itPowerModel = new FractionBasedITPowerModel(Setup.SERVER_IT_POWER_FRACTION);
 	
 	/**
 	 * This method returns the server power consumption according to the selected server power model.
@@ -41,8 +49,19 @@ public class PowerModelSelector {
 	 * @param itPower Current IT power consumption of the DC.
 	 * @return Current power consumption of the HVAC infrastructure.
 	 */
-	public static double getHvacPower(double pue, double itPower) {
-		return hvacPowerModel.getCoolingPower(pue, itPower);
+	public static double getHVACPower(double pue, double itPower) {
+		return HVACPowerModel.getCoolingPower(pue, itPower);
+	}
+	
+	/**
+	 * Retrieves the current IT power consumption of the DC.
+	 * @param serverPower Current total server power consumption of the DC.
+	 * @param amountOfRunningJobs Current number of running jobs in the DC.
+	 * @param amountOfOccupiedServers Current number of active compute nodes in the DC.
+	 * @return Current IT power consumption of the DC.
+	 */
+	public static double getITPower(double serverPower, int amountOfRunningJobs, int amountOfOccupiedServers) {
+		return itPowerModel.getITPower(serverPower, amountOfRunningJobs, amountOfOccupiedServers);
 	}
 
 }

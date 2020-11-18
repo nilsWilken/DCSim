@@ -35,7 +35,7 @@ import de.uma.dcsim.eventHandling.EventQueue;
 import de.uma.dcsim.eventHandling.EventType;
 import de.uma.dcsim.eventHandling.JobEvent;
 import de.uma.dcsim.eventHandling.ServerEvent;
-import de.uma.dcsim.powerModels.itPowerModels.ITPowerModelSelector;
+import de.uma.dcsim.powerModels.PowerModelSelector;
 import de.uma.dcsim.pueModels.PUEModelSelector;
 import de.uma.dcsim.scheduling.Scheduler;
 import de.uma.dcsim.scheduling.schedulingStrategies.SchedulingStrategyProvider;
@@ -503,7 +503,7 @@ public class DC {
 			double serverPower = (this.eventHandler.getIdleServer().size())*Server.IDLE_POWER;
 			serverPower += this.occupiedServerPC;
 			
-			this.overallCurrentPC += ITPowerModelSelector.getITPower(serverPower, this.eventHandler.getRunningJobs().size(), this.eventHandler.getOccupiedServer().size());
+			this.overallCurrentPC += PowerModelSelector.getITPower(serverPower, this.eventHandler.getRunningJobs().size(), this.eventHandler.getOccupiedServer().size());
 			this.currentITPower = this.overallCurrentPC;
 
 			this.overallCurrentServerUtil = ((double)this.eventHandler.getOccupiedServer().size()/(double)this.server.size());

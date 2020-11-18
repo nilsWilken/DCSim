@@ -147,7 +147,7 @@ public class BatchJob {
 		this.frequency = frequency;
 		this.originalFrequency = frequency;
 		this.amountOfServers = amountOfServers;
-		this.averagePowerConsumption = averagePowerConsumption;
+//		this.averagePowerConsumption = averagePowerConsumption;
 		this.duration = duration;
 		this.elapsedRuntime = 0;
 		this.remainingRuntime = duration;

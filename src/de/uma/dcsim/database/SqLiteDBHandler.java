@@ -536,7 +536,7 @@ public class SqLiteDBHandler {
 			l7.add(a7[i]);
 		}
 
-		TableType type = TableType.GENERAL_SIMULATION_MONITORING_TABLE;
+//		TableType type = TableType.GENERAL_SIMULATION_MONITORING_TABLE;
 //		this.insertRecord("splitTest", new DatabaseRecord(TableType.getTableSchema(type), a1), type);
 //		this.insertRecord("splitTest", new DatabaseRecord(TableType.getTableSchema(type), a2), type);
 //		this.insertRecord("splitTest", new DatabaseRecord(TableType.getTableSchema(type), a3), type);
